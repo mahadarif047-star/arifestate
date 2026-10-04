@@ -1,4 +1,6 @@
-import { Bed, Bath, Ruler, MapPin, ArrowRight, LandPlot } from "lucide-react";
+
+import { useState } from "react";
+import { Bed, Bath, Ruler, MapPin, ArrowRight, LandPlot, X } from "lucide-react";
 
 interface Listing {
   id: number;
@@ -9,6 +11,7 @@ interface Listing {
   image: string;
   beds?: number;
   baths?: number;
+  description?: string;
 }
 
 const houses: Listing[] = [
@@ -21,6 +24,7 @@ const houses: Listing[] = [
     baths: 5,
     size: "10 Marla",
     image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=800&auto=format&fit=crop",
+    description: "A beautiful corner house with spacious rooms, modern finishing, and a comfortable layout, ideal for a family looking for a premium home.",
   },
   {
     id: 2,
@@ -31,6 +35,7 @@ const houses: Listing[] = [
     baths: 5,
     size: "1 Kanal",
     image: "https://images.unsplash.com/photo-1570129477492-45c003edd2be?q=80&w=800&auto=format&fit=crop",
+    description: "A modern minimalist villa offering spacious living areas, elegant architecture, and a peaceful environment for comfortable family living.",
   },
   {
     id: 3,
@@ -41,6 +46,7 @@ const houses: Listing[] = [
     baths: 6,
     size: "2 Kanal",
     image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=800&auto=format&fit=crop",
+    description: "A spacious classic family home with generous bedrooms, bathrooms, and living spaces, suitable for a large family.",
   },
   {
     id: 4,
@@ -51,6 +57,7 @@ const houses: Listing[] = [
     baths: 6,
     size: "1 Kanal",
     image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=800&auto=format&fit=crop",
+    description: "A stylish contemporary bungalow featuring modern design, spacious interiors, and a practical layout in a well-established society.",
   },
   {
     id: 5,
@@ -61,6 +68,7 @@ const houses: Listing[] = [
     baths: 6,
     size: "2 Kanal",
     image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=800&auto=format&fit=crop",
+    description: "A luxurious front-facing house offering premium space, elegant interiors, and excellent accommodation for a large family.",
   },
   {
     id: 6,
@@ -71,6 +79,7 @@ const houses: Listing[] = [
     baths: 5,
     size: "1 kanal",
     image: "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?q=80&w=800&auto=format&fit=crop",
+    description: "A cozy suburban home with comfortable living spaces and a welcoming design, perfect for peaceful family living.",
   },
 ];
 
@@ -82,6 +91,7 @@ const plots: Listing[] = [
     price: "PKR 13 Crore",
     size: "2 Kanal",
     image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=800&auto=format&fit=crop",
+    description: "A prime residential plot in a desirable location, offering excellent space and potential for building a premium home.",
   },
   {
     id: 2,
@@ -90,6 +100,7 @@ const plots: Listing[] = [
     price: "PKR 9.5 Crore",
     size: "2 Kanal",
     image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=800&auto=format&fit=crop",
+    description: "A spacious corner plot in a prime location, ideal for constructing a large and comfortable residential property.",
   },
   {
     id: 3,
@@ -98,6 +109,7 @@ const plots: Listing[] = [
     price: "PKR 4 Crore",
     size: "1 Kanal",
     image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=800&auto=format&fit=crop",
+    description: "A well-positioned plot located on a wide boulevard, offering excellent access and strong potential for residential development.",
   },
   {
     id: 4,
@@ -106,6 +118,7 @@ const plots: Listing[] = [
     price: "PKR 4.5 Crore",
     size: "1 Kanal",
     image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=800&auto=format&fit=crop",
+    description: "A commercial plot with excellent potential for business development in a convenient and accessible location.",
   },
   {
     id: 5,
@@ -114,6 +127,7 @@ const plots: Listing[] = [
     price: "PKR 155 Lac",
     size: "8 Marla",
     image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=800&auto=format&fit=crop",
+    description: "A ready-to-construct plot offering a practical size and a suitable opportunity for building your own property.",
   },
   {
     id: 6,
@@ -122,10 +136,19 @@ const plots: Listing[] = [
     price: "PKR 60 Lacs",
     size: "5 Marla",
     image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=800&auto=format&fit=crop",
+    description: "An investment-grade plot offering an attractive opportunity for buyers looking for a suitable property investment.",
   },
 ];
 
-function ListingCard({ item, type }: { item: Listing; type: "house" | "plot" }) {
+function ListingCard({
+  item,
+  type,
+  onViewDetails,
+}: {
+  item: Listing;
+  type: "house" | "plot";
+  onViewDetails: (item: Listing, type: "house" | "plot") => void;
+}) {
   return (
     <div className="group bg-white rounded-2xl overflow-hidden border border-purple-100 shadow-sm hover:shadow-xl hover:shadow-purple-100 hover:-translate-y-1 transition-all duration-500">
       {/* Image */}
@@ -177,7 +200,10 @@ function ListingCard({ item, type }: { item: Listing; type: "house" | "plot" }) 
           )}
         </div>
 
-        <button className="w-full mt-5 flex items-center justify-center gap-2 bg-purple-50 group-hover:bg-purple-500 text-purple-600 group-hover:text-white text-sm font-medium py-2.5 rounded-xl transition-colors duration-500">
+        <button
+          onClick={() => onViewDetails(item, type)}
+          className="w-full mt-5 flex items-center justify-center gap-2 bg-purple-50 group-hover:bg-purple-500 text-purple-600 group-hover:text-white text-sm font-medium py-2.5 rounded-xl transition-colors duration-500"
+        >
           View Details
           <ArrowRight className="w-4 h-4" />
         </button>
@@ -187,6 +213,11 @@ function ListingCard({ item, type }: { item: Listing; type: "house" | "plot" }) 
 }
 
 export default function SellPage() {
+  const [selectedListing, setSelectedListing] = useState<{
+    item: Listing;
+    type: "house" | "plot";
+  } | null>(null);
+
   return (
     <section className="bg-purple-50/40 min-h-screen py-16 px-6">
       <div className="max-w-7xl mx-auto">
@@ -211,7 +242,14 @@ export default function SellPage() {
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {houses.map((house) => (
-              <ListingCard key={`house-${house.id}`} item={house} type="house" />
+              <ListingCard
+                key={`house-${house.id}`}
+                item={house}
+                type="house"
+                onViewDetails={(item, type) =>
+                  setSelectedListing({ item, type })
+                }
+              />
             ))}
           </div>
         </div>
@@ -223,11 +261,89 @@ export default function SellPage() {
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {plots.map((plot) => (
-              <ListingCard key={`plot-${plot.id}`} item={plot} type="plot" />
+              <ListingCard
+                key={`plot-${plot.id}`}
+                item={plot}
+                type="plot"
+                onViewDetails={(item, type) =>
+                  setSelectedListing({ item, type })
+                }
+              />
             ))}
           </div>
         </div>
       </div>
+
+      {/* Details Modal */}
+      {selectedListing && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+          onClick={() => setSelectedListing(null)}
+        >
+          <div
+            className="relative w-full max-w-2xl bg-white rounded-2xl overflow-hidden shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setSelectedListing(null)}
+              className="absolute top-4 right-4 z-10 bg-white/90 rounded-full p-2 text-gray-600 hover:text-purple-600 shadow-md transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <img
+              src={selectedListing.item.image}
+              alt={selectedListing.item.title}
+              className="w-full h-64 object-cover"
+            />
+
+            <div className="p-6">
+              <div className="flex items-center gap-1.5 text-sm text-gray-500 mb-2">
+                <MapPin className="w-4 h-4 text-purple-400" />
+                {selectedListing.item.location}
+              </div>
+
+              <h2 className="text-2xl font-semibold text-gray-800 mb-2">
+                {selectedListing.item.title}
+              </h2>
+
+              <p className="text-xl font-semibold text-purple-500 mb-5">
+                {selectedListing.item.price}
+              </p>
+
+              <div className="flex flex-wrap items-center gap-5 text-sm text-gray-500 border-y border-purple-50 py-4 mb-5">
+                {selectedListing.type === "house" ? (
+                  <>
+                    <span className="flex items-center gap-1.5">
+                      <Bed className="w-4 h-4 text-purple-400" />
+                      {selectedListing.item.beds} Beds
+                    </span>
+
+                    <span className="flex items-center gap-1.5">
+                      <Bath className="w-4 h-4 text-purple-400" />
+                      {selectedListing.item.baths} Baths
+                    </span>
+
+                    <span className="flex items-center gap-1.5">
+                      <Ruler className="w-4 h-4 text-purple-400" />
+                      {selectedListing.item.size}
+                    </span>
+                  </>
+                ) : (
+                  <span className="flex items-center gap-1.5">
+                    <LandPlot className="w-4 h-4 text-purple-400" />
+                    {selectedListing.item.size}
+                  </span>
+                )}
+              </div>
+
+              <p className="text-gray-600 text-sm leading-6">
+                {selectedListing.item.description}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
