@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Bed, Bath, Ruler, MapPin, ArrowRight, X } from "lucide-react";
 
@@ -12,6 +11,10 @@ interface RentalHouse {
   size: string;
   image: string;
   description: string;
+}
+
+interface RentPageProps {
+  searchTerm: string;
 }
 
 const rentals: RentalHouse[] = [
@@ -173,8 +176,16 @@ const rentals: RentalHouse[] = [
   },
 ];
 
-export default function RentPage() {
-  const [selectedHouse, setSelectedHouse] = useState<RentalHouse | null>(null);
+export default function RentPage({ searchTerm }: RentPageProps) {
+  const [selectedHouse, setSelectedHouse] = useState<RentalHouse | null>(
+    null
+  );
+
+  const filteredRentals = rentals.filter((house) =>
+    `rent ${house.title} ${house.location} ${house.price} ${house.size} ${house.description}`
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase())
+  );
 
   return (
     <section className="bg-purple-50/40 min-h-screen py-16 px-6">
@@ -184,18 +195,21 @@ export default function RentPage() {
           <span className="inline-block bg-purple-100 text-purple-600 text-xs font-semibold tracking-wide uppercase px-4 py-1.5 rounded-full mb-4">
             Homes for Rent
           </span>
+
           <h1 className="text-3xl sm:text-4xl font-semibold text-gray-800 mb-4">
             Find a house you'll
             <span className="text-purple-500 italic"> love to rent</span>
           </h1>
+
           <p className="text-gray-600 text-base sm:text-lg">
-            Browse verified rental listings across Lahore's most trusted societies.
+            Browse verified rental listings across Lahore's most trusted
+            societies.
           </p>
         </div>
 
         {/* Cards grid: 3 per row */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {rentals.map((house) => (
+          {filteredRentals.map((house) => (
             <div
               key={house.id}
               className="group bg-white rounded-2xl overflow-hidden border border-purple-100 shadow-sm hover:shadow-xl hover:shadow-purple-100 hover:-translate-y-1 transition-all duration-500"
@@ -207,6 +221,7 @@ export default function RentPage() {
                   alt={house.title}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                 />
+
                 <span className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-purple-600 text-xs font-semibold px-3 py-1 rounded-full shadow-sm">
                   For Rent
                 </span>
@@ -232,10 +247,12 @@ export default function RentPage() {
                     <Bed className="w-4 h-4 text-purple-400" />
                     {house.beds} Beds
                   </span>
+
                   <span className="flex items-center gap-1.5">
                     <Bath className="w-4 h-4 text-purple-400" />
                     {house.baths} Baths
                   </span>
+
                   <span className="flex items-center gap-1.5">
                     <Ruler className="w-4 h-4 text-purple-400" />
                     {house.size}

@@ -14,6 +14,45 @@ function App() {
     "home" | "buy" | "rent" | "sell" | "agents" | "about"
   >("home")
 
+  const [searchTerm, setSearchTerm] = useState("")
+
+  const handleSearch = (value: string) => {
+    setSearchTerm(value)
+
+    const search = value.trim().toLowerCase()
+
+    if (search === "") {
+      return
+    }
+
+    if (
+      search.includes("rent") ||
+      search.includes("rental") ||
+      search.includes("portion")
+    ) {
+      setPage("rent")
+      return
+    }
+
+    if (
+      search.includes("plot") ||
+      search.includes("sell") ||
+      search.includes("sale")
+    ) {
+      setPage("sell")
+      return
+    }
+
+    if (
+      search.includes("buy") ||
+      search.includes("house") ||
+      search.includes("home")
+    ) {
+      setPage("buy")
+      return
+    }
+  }
+
   return (
     <>
       <Navbar
@@ -23,25 +62,35 @@ function App() {
         onAgentsClick={() => setPage("agents")}
         onAboutClick={() => setPage("about")}
         onLogoClick={() => setPage("home")}
+        onSearch={handleSearch}
       />
-      {page === "buy" && <BuysSection />}
-      {page === "rent" && <RentSection />}
-      {page === "sell" && <SellSection />}
+
+      {page === "buy" && (
+        <BuysSection searchTerm={searchTerm} />
+      )}
+
+      {page === "rent" && (
+        <RentSection searchTerm={searchTerm} />
+      )}
+
+      {page === "sell" && (
+        <SellSection searchTerm={searchTerm} />
+      )}
+
       {page === "agents" && <Agentspage />}
+
       {page === "about" && <AboutSection />}
+
       {page === "home" && (
         <>
-          <HeroSection/>
-          <Experience/>
+          <HeroSection />
+          <Experience />
         </>
       )}
-      <Footer/>
+
+      <Footer />
     </>
   )
 }
 
 export default App
-
-
-
-

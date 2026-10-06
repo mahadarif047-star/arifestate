@@ -8,6 +8,7 @@ interface NavbarProps {
   onAgentsClick?: () => void;
   onAboutClick?: () => void;
   onLogoClick?: () => void;
+  onSearch?: (value: string) => void;
 }
 
 export default function Navbar({
@@ -17,8 +18,10 @@ export default function Navbar({
   onAgentsClick,
   onAboutClick,
   onLogoClick,
+  onSearch,
 }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
 
   const navLinks = [
     { label: "Buy", hasDropdown: true },
@@ -27,6 +30,11 @@ export default function Navbar({
     { label: "Agents", hasDropdown: false },
     { label: "About", hasDropdown: false },
   ];
+
+  const handleSearch = (value: string) => {
+    setSearchValue(value);
+    onSearch?.(value);
+  };
 
   return (
     <nav className="bg-white border-b border-purple-100 shadow-sm sticky top-0 z-50">
@@ -73,10 +81,17 @@ export default function Navbar({
 
           {/* Search + CTA (Desktop) */}
           <div className="hidden md:flex items-center gap-3">
-            <button className="flex items-center gap-2 bg-purple-50 hover:bg-purple-100 text-purple-600 px-4 py-2 rounded-full text-sm font-medium transition-colors">
-              <Search className="w-4 h-4" />
-              Search
-            </button>
+            <div className="flex items-center gap-2 bg-purple-50 hover:bg-purple-100 text-purple-600 px-4 py-2 rounded-full text-sm font-medium transition-colors">
+              <Search className="w-4 h-4 shrink-0" />
+              <input
+                type="text"
+                value={searchValue}
+                onChange={(e) => handleSearch(e.target.value)}
+                placeholder="Search"
+                className="bg-transparent outline-none w-24 placeholder:text-purple-600"
+              />
+            </div>
+
             <button className="bg-purple-500 hover:bg-purple-600 text-white px-5 py-2 rounded-full text-sm font-medium transition-colors shadow-sm shadow-purple-200">
               List Property
             </button>
@@ -114,10 +129,18 @@ export default function Navbar({
                 {link.hasDropdown && <ChevronDown className="w-4 h-4" />}
               </button>
             ))}
-            <button className="flex items-center gap-2 bg-purple-50 text-purple-600 px-3 py-3 rounded-lg text-sm font-medium mt-2">
-              <Search className="w-4 h-4" />
-              Search
-            </button>
+
+            <div className="flex items-center gap-2 bg-purple-50 text-purple-600 px-3 py-3 rounded-lg text-sm font-medium mt-2">
+              <Search className="w-4 h-4 shrink-0" />
+              <input
+                type="text"
+                value={searchValue}
+                onChange={(e) => handleSearch(e.target.value)}
+                placeholder="Search"
+                className="bg-transparent outline-none w-full placeholder:text-purple-600"
+              />
+            </div>
+
             <button className="bg-purple-500 hover:bg-purple-600 text-white px-3 py-3 rounded-lg text-sm font-medium mt-1">
               List Property
             </button>
